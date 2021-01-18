@@ -14,7 +14,7 @@ const drawScene = () => {
   // Background
   drawBackground(ctx);
 
-  // Sun
+  // Sun (ARC)
   drawSun(ctx);
 
   // Tree
@@ -25,6 +25,11 @@ const drawScene = () => {
   };
   drawTree(ctx, [size * 0.14, size * 0.8], size * 0.4, treeProps);
   drawTree(ctx, [size * 0.9, size * 0.6], size * 0.2, treeProps);
+
+  // Birds (Quadratic curve)
+  for (i = 0; i < 3; i++) {
+    drawBirds(ctx);
+  }
 
   // House properties
   let properties = {
@@ -114,6 +119,23 @@ const drawTree = (ctx, location, scale, properties) => {
   ctx.restore();
 };
 
+const drawBirds = ctx => {
+  let r = getRandomIntegerBetween(10, 30);
+  let x = getRandomIntegerBetween(100, 900);
+  let y = getRandomIntegerBetween(100, 250);
+  ctx.lineWidth = getRandomIntegerBetween(2, 3);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.quadraticCurveTo(x + r, y - r, x + r * 2, y);
+
+  x = x + r * 2;
+  y = y;
+
+  ctx.moveTo(x, y);
+  ctx.quadraticCurveTo(x + r, y - r, x + r * 2, y);
+  ctx.stroke();
+};
+
 const drawHouse = (ctx, location, scale, properties) => {
   ctx.beginPath();
   ctx.save();
@@ -160,7 +182,7 @@ const drawHouse = (ctx, location, scale, properties) => {
     ctx.stroke();
     ctx.fill();
 
-    // Doorknob
+    // Doorknob (ARC)
     ctx.beginPath();
     ctx.fillStyle = "white";
     ctx.arc(0.28, -0.23, 0.02, 0, 2 * Math.PI);
