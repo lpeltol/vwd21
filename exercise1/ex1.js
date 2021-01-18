@@ -31,6 +31,9 @@ const drawScene = () => {
     drawBirds(ctx);
   }
 
+  // Snowman (Bezier curve & ARC)
+  drawSnowman(ctx);
+
   // House properties
   let properties = {
     levels: getRandomIntegerBetween(5, 8),
@@ -63,7 +66,7 @@ const drawScene = () => {
 
 const drawBackground = ctx => {
   ctx.beginPath();
-  ctx.fillStyle = "green";
+  ctx.fillStyle = "white";
   ctx.rect(0, size * 0.5, size, size * 0.5);
   ctx.fill();
 
@@ -133,6 +136,67 @@ const drawBirds = ctx => {
 
   ctx.moveTo(x, y);
   ctx.quadraticCurveTo(x + r, y - r, x + r * 2, y);
+  ctx.stroke();
+};
+
+const drawSnowman = ctx => {
+  // Body
+  ctx.beginPath();
+  ctx.lineWidth = 3;
+  ctx.moveTo(900, 900);
+  ctx.bezierCurveTo(900, 800, 800, 800, 800, 900);
+  ctx.stroke();
+
+  // Head
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.arc(850, 800, 25, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  // Eyes
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.arc(840, 800, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.arc(860, 800, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  // Buttons
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.lineWidth = 3;
+  ctx.arc(850, 850, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  ctx.lineWidth = 3;
+  ctx.arc(850, 870, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  // Hands
+  ctx.beginPath();
+  ctx.moveTo(810, 850);
+  ctx.lineTo(775, 825);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(890, 850);
+  ctx.lineTo(925, 825);
+  ctx.stroke();
+
+  // Bottom
+  ctx.beginPath();
+  ctx.moveTo(900, 900);
+  ctx.lineTo(800, 900);
   ctx.stroke();
 };
 
