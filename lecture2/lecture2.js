@@ -63,7 +63,13 @@ const drawSun = ctx => {
   ctx.beginPath();
   ctx.fillStyle = "yellow";
   ctx.lineWidth = 0.1;
-  ctx.arc(100, 100, 75, 0, 2 * Math.PI);
+  ctx.arc(
+    getRandomIntegerBetween(100, 920),
+    getRandomIntegerBetween(100, 100),
+    getRandomIntegerBetween(50, 75),
+    0,
+    2 * Math.PI
+  );
   ctx.fill();
   ctx.stroke();
 };
