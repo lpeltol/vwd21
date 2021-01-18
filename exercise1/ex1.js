@@ -17,6 +17,15 @@ const drawScene = () => {
   // Sun
   drawSun(ctx);
 
+  // Tree
+  const treeProps = {
+    levels: getRandomIntegerBetween(5, 8),
+    wallColor: "brown",
+    roofColor: getRandomColor()
+  };
+  drawTree(ctx, [size * 0.14, size * 0.8], size * 0.4, treeProps);
+  drawTree(ctx, [size * 0.9, size * 0.6], size * 0.2, treeProps);
+
   // House properties
   let properties = {
     levels: getRandomIntegerBetween(5, 8),
@@ -72,6 +81,37 @@ const drawSun = ctx => {
   );
   ctx.fill();
   ctx.stroke();
+};
+
+const drawTree = (ctx, location, scale, properties) => {
+  ctx.beginPath();
+
+  ctx.save();
+  ctx.translate(location[0], location[1]);
+  ctx.scale(scale, scale);
+  ctx.lineWidth = 0.04;
+
+  ctx.fillStyle = properties.wallColor;
+
+  //trunk
+  ctx.beginPath();
+  ctx.rect(-0.1, -0.2, 0.02, 0.1);
+  ctx.stroke();
+  ctx.fill();
+
+  ctx.translate(-0.08, -0.1);
+
+  ctx.fillStyle = "rgba(0,255,0,1)";
+  ctx.beginPath();
+  ctx.moveTo(-0.2, -0.1);
+  ctx.lineTo(+0.2, -0.1);
+  ctx.lineTo(+0.0, -0.7);
+  ctx.lineTo(-0.2, -0.1);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.fill();
+
+  ctx.restore();
 };
 
 const drawHouse = (ctx, location, scale, properties) => {
