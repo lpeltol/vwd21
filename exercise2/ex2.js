@@ -5,6 +5,7 @@ let speed = 0.02;
 const main = () => {
   const canvas = document.getElementById("myCanvas");
   const ctx = canvas.getContext("2d");
+
   canvas.width = size;
   canvas.height = size;
   ctx.scale(size, size);
@@ -15,15 +16,20 @@ const main = () => {
 function animate() {
   let prob = Math.random();
   if (prob < 0.05) {
-    let y = Math.random();
-    let objectSize = getRandomNumberBetween(0.1, 0.4);
-
-    objects.push(
-      new Planet([1 + objectSize * 0.5, y], objectSize, {
-        color1: getRandomColor(),
-        color2: getRandomColor()
-      })
-    );
+    let y = getRandomNumberBetween(0.1, 0.9);
+    let planetSize = getRandomNumberBetween(0.1, 0.4);
+    let asteroidSize = getRandomNumberBetween(0.4, 0.8);
+    let asteroidProb = Math.random();
+    if (asteroidProb < 0.1) {
+      objects.push(new Asteroid([1 + asteroidSize * 0.5, y], asteroidSize));
+    } else {
+      objects.push(
+        new Planet([1 + planetSize * 0.5, y], planetSize, {
+          color1: getRandomColor(),
+          color2: getRandomColor()
+        })
+      );
+    }
   }
 
   // Move plantes in canvas
@@ -35,22 +41,18 @@ function animate() {
     }
   }
 
-  // Sort
-  // objects.sort((a, b) => a.scale - b.scale);
-
-  drawPlanets();
+  drawTheSpace();
   window.requestAnimationFrame(animate);
 }
 
-function drawPlanets() {
+function drawTheSpace() {
   let canvas = document.getElementById("myCanvas");
   let ctx = canvas.getContext("2d");
 
   drawBackground(ctx);
 
-  for (let i = 0; i < objects.length; i++) {
-    objects[i].draw(ctx);
-  }
+  // Map through the object array and draw the object
+  objects.map(object => object.draw(ctx));
 }
 
 const drawBackground = ctx => {
@@ -85,6 +87,41 @@ class Planet {
     ctx.arc(0.5, 0.25, 0.25, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
+  }
+}
+
+class Asteroid {
+  constructor(loc, scale) {
+    this.location = loc;
+    this.scale = scale;
+  }
+
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.save();
+    ctx.translate(this.location[0], this.location[1]);
+    ctx.scale(this.scale, this.scale);
+    ctx.lineWidth = 0.02;
+
+    // Asteroid shape
+    // https://stackoverflow.com/questions/19541192/how-to-draw-cloud-shape-in-html5-canvas
+    ctx.moveTo(0.17, 0.08);
+    ctx.bezierCurveTo(0.13, 0.1, 0.13, 0.15, 0.23, 0.15);
+    ctx.bezierCurveTo(0.25, 0.18, 0.32, 0.18, 0.34, 0.15);
+    ctx.bezierCurveTo(0.42, 0.15, 0.42, 0.12, 0.39, 0.1);
+    ctx.bezierCurveTo(0.43, 0.04, 0.37, 0.03, 0.34, 0.05);
+    ctx.bezierCurveTo(0.32, 0.005, 0.25, 0.02, 0.25, 0.05);
+    ctx.bezierCurveTo(0.2, 0.005, 0.15, 0.02, 0.17, 0.08);
+
+    const grd = ctx.createLinearGradient(0, 0, 1, 1);
+    grd.addColorStop(0, "#676767");
+    grd.addColorStop(1, "#020007");
+    ctx.fillStyle = grd;
+
+    ctx.stroke();
+    ctx.fill();
+    ctx.closePath();
     ctx.restore();
   }
 }
