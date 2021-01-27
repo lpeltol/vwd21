@@ -1,4 +1,5 @@
 const size = 1000;
+const textSize = 0.01;
 const objects = [];
 let speed = 0.02;
 
@@ -26,7 +27,7 @@ function animate() {
       objects.push(
         new Planet([1 + planetSize * 0.5, y], planetSize, {
           color1: getRandomColor(),
-          color2: getRandomColor()
+          color2: getRandomColor(),
         })
       );
     }
@@ -50,12 +51,13 @@ function drawTheSpace() {
   let ctx = canvas.getContext("2d");
 
   drawBackground(ctx);
+  drawText(ctx);
 
   // Map through the object array and draw the object
-  objects.map(object => object.draw(ctx));
+  objects.map((object) => object.draw(ctx));
 }
 
-const drawBackground = ctx => {
+const drawBackground = (ctx) => {
   const grd = ctx.createLinearGradient(0, 0, 1, 1);
   grd.addColorStop(0, "#430255");
   grd.addColorStop(1, "#076460");
@@ -64,6 +66,16 @@ const drawBackground = ctx => {
   ctx.fillStyle = grd;
   ctx.fillRect(0, 0, 1, 1);
 };
+
+const drawText = (ctx) => {
+  ctx.save();
+  ctx.scale(textSize, textSize);
+  ctx.font = "3px Verdana"
+  ctx.fillStyle = "tomato";
+  ctx.fillText("Planets: Arc", 1, 90);
+  ctx.fillText("Asteroids: Bezier Curve", 1, 95);
+  ctx.restore();
+}
 
 // Planet class
 class Planet {
