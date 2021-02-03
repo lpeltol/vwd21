@@ -1,7 +1,8 @@
 const size = 1000;
 const textSize = 0.01;
 const objects = [];
-let speed = 0.02;
+let forward = true;
+let stretch = false;
 
 const main = () => {
   const canvas = document.getElementById("myCanvas");
@@ -15,6 +16,77 @@ const main = () => {
 };
 
 function animate() {
+  let x = 0;
+  let y = 0.7;
+  let initialShape = {
+    x: 0.5,
+    y: 0.25,
+    radiusX: 0.25,
+    radiusY: 0.25,
+    rotation: 0,
+    startAngle: 0,
+    endAngle: 2 * Math.PI,
+  };
+
+  objects.push(
+    new Ball([x, y], 0.1, initialShape, {
+      color: "tomato",
+    })
+  );
+
+  if (forward) {
+    for (let i = 0; i < objects.length; i++) {
+      objects[i].location[0] += 0.01;
+
+      if (stretch && objects[i].shape.radiusX <= 0.35) {
+        objects[i].shape.radiusX += 0.01;
+        objects[i].shape.radiusY -= 0.01;
+        if (objects[i].shape.radiusX >= 0.35) {
+          stretch = false;
+        }
+      }
+      if (!stretch && objects[i].shape.radiusX >= 0.25) {
+        objects[i].shape.radiusX -= 0.01;
+        objects[i].shape.radiusY += 0.01;
+      }
+
+      if (objects[i].location[0] > 0.95) {
+        forward = false;
+        stretch = true;
+        objects[i].shape.radiusX = 0.15;
+        objects[i].shape.radiusY = 0.35;
+        objects[i].properties.color = getRandomColor();
+      }
+      objects.splice(1, 1);
+    }
+  }
+
+  if (!forward) {
+    for (let i = 0; i < objects.length; i++) {
+      objects[i].location[0] -= 0.01;
+
+      if (stretch && objects[i].shape.radiusX <= 0.35) {
+        objects[i].shape.radiusX += 0.01;
+        objects[i].shape.radiusY -= 0.01;
+        if (objects[i].shape.radiusX >= 0.35) {
+          stretch = false;
+        }
+      }
+      if (!stretch && objects[i].shape.radiusX >= 0.25) {
+        objects[i].shape.radiusX -= 0.01;
+        objects[i].shape.radiusY += 0.01;
+      }
+
+      if (objects[i].location[0] < -0.05) {
+        forward = true;
+        stretch = true;
+        objects[i].shape.radiusX = 0.15;
+        objects[i].shape.radiusY = 0.35;
+        objects[i].properties.color = getRandomColor();
+      }
+      objects.splice(1, 1);
+    }
+  }
   draw();
   window.requestAnimationFrame(animate);
 }
@@ -25,32 +97,39 @@ function draw() {
 
   drawBackground(ctx);
   drawText(ctx);
+
+  // Map through the object array and draw the object
+  objects.map((object) => object.draw(ctx));
 }
 
 const drawBackground = (ctx) => {
-  const grd = ctx.createLinearGradient(0, 0, 1, 1);
-  grd.addColorStop(0, "#430255");
-  grd.addColorStop(1, "#076460");
+  ctx.beginPath();
+  ctx.fillStyle = "skyblue";
+  ctx.rect(0, 0, 1, 0.75);
+  ctx.fill();
 
-  // Fill with gradient
-  ctx.fillStyle = grd;
-  ctx.fillRect(0, 0, 1, 1);
+  ctx.beginPath();
+  ctx.fillStyle = "white";
+  ctx.rect(0, 0.75, 1, 0.25);
+  ctx.fill();
 };
 
 const drawText = (ctx) => {
   ctx.save();
   ctx.scale(textSize, textSize);
-  ctx.font = "3px Verdana"
+  ctx.font = "3px Verdana";
   ctx.fillStyle = "tomato";
-  ctx.fillText("FillText", 1, 95);
+  ctx.fillText("Squash & stretch", 1, 90);
+  ctx.fillText("Secondary action: change color on impact", 1, 95);
   ctx.restore();
-}
+};
 
 // Ball class
 class Ball {
-  constructor(loc, scale, properties) {
+  constructor(loc, scale, shape, properties) {
     this.location = loc;
     this.scale = scale;
+    this.shape = shape;
     this.properties = properties;
   }
 
@@ -60,18 +139,22 @@ class Ball {
     ctx.translate(this.location[0], this.location[1]);
     ctx.scale(this.scale, this.scale);
     ctx.lineWidth = 0.03;
-    const grd = ctx.createLinearGradient(0, 0, 1, 1);
-    grd.addColorStop(0, this.properties.color1);
-    grd.addColorStop(1, this.properties.color2);
-    ctx.fillStyle = grd;
+    ctx.fillStyle = this.properties.color;
 
-    ctx.arc(0.5, 0.25, 0.25, 0, 2 * Math.PI);
+    ctx.ellipse(
+      this.shape.x,
+      this.shape.y,
+      this.shape.radiusX,
+      this.shape.radiusY,
+      this.shape.rotation,
+      this.shape.startAngle,
+      this.shape.endAngle
+    );
     ctx.fill();
     ctx.stroke();
     ctx.restore();
   }
 }
-
 
 // Utils
 
