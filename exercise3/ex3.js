@@ -28,7 +28,7 @@ let songNodeMap = [
   294.33,
   261.626,
 ];
-let currentNode = 0;
+let currentNode = -1;
 
 const main = () => {
   const canvas = document.getElementById("myCanvas");
@@ -82,7 +82,7 @@ function animate() {
         objects[i].shape.radiusX = 0.15;
         objects[i].shape.radiusY = 0.35;
         objects[i].properties.color = getRandomColor();
-        if (currentNode < 13) {
+        if (currentNode < 13 && currentNode >= 0) {
           playSound(songNodeMap[currentNode]);
         }
         currentNode++;
@@ -117,7 +117,7 @@ function animate() {
         objects[i].shape.radiusX = 0.15;
         objects[i].shape.radiusY = 0.35;
         objects[i].properties.color = getRandomColor();
-        if (currentNode < 13) {
+        if (currentNode < 13 && currentNode >= 0) {
           playSound(songNodeMap[currentNode]);
         }
         currentNode++;
