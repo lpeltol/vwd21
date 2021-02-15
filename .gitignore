@@ -1,4 +1,11 @@
+# Files
+
 *.docx
+*.pdf
+answers.txt
+
+# Dir
+
 /lectures
 /project
 /random
