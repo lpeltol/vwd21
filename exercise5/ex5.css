@@ -1,0 +1,19 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  background: seashell;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vmin;
+  height: 80vmin;
+}
+
+a {
+  color: white;
+}
